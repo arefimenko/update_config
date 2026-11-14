@@ -95,7 +95,12 @@ body {
   font-size: 0.9rem;
 }
 .section .title { flex: 1; }
-.section .title small { font-weight: 400; color: var(--muted); }
+.section .title small {
+  display: block;
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
 
 .section .chev {
   width: 10px;

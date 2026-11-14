@@ -255,25 +255,46 @@ function setupProcessor(root) {
 }
 
 /* Поле со значением и кнопкой «Скопировать» */
+
+// Классическое копирование, работает и в Chrome на iPhone (там navigator.clipboard часто недоступен).
+// Должно вызываться синхронно прямо в обработчике нажатия.
+function legacyCopy(text) {
+  // временный <span> с текстом, выделяем его диапазоном и копируем (без фокуса и клавиатуры)
+  const span = document.createElement('span');
+  span.textContent = text;
+  span.style.cssText = 'position:fixed;top:0;left:0;white-space:pre;opacity:0;' +
+    'user-select:text;-webkit-user-select:text;pointer-events:none;';
+  document.body.appendChild(span);
+  const sel = window.getSelection();
+  const range = document.createRange();
+  range.selectNodeContents(span);
+  sel.removeAllRanges();
+  sel.addRange(range);
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch { /* ignore */ }
+  sel.removeAllRanges();
+  span.remove();
+  return ok;
+}
+
 async function copyText(text) {
+  let ok = legacyCopy(text); // сразу, пока браузер считает это нажатием пользователя
   try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    // запасной вариант для старых браузеров
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.setAttribute('readonly', '');
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    ta.setSelectionRange(0, text.length);
-    let ok = false;
-    try { ok = document.execCommand('copy'); } catch { /* ignore */ }
-    ta.remove();
-    return ok;
-  }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+      ok = true;
+    }
+  } catch { /* остаётся результат legacyCopy */ }
+  return ok;
+}
+
+// Если скопировать не вышло — выделяем текст, чтобы его можно было скопировать долгим нажатием
+function selectText(el) {
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
 }
 
 function makeCopyBox(value) {
@@ -287,7 +308,8 @@ function makeCopyBox(value) {
   let timer;
   btn.addEventListener('click', async () => {
     const ok = await copyText(value);
-    btn.textContent = ok ? 'Скопировано ✓' : 'Не вышло — выделите вручную';
+    if (!ok) selectText(code);
+    btn.textContent = ok ? 'Скопировано ✓' : 'Не вышло — зажмите адрес и скопируйте';
     btn.classList.toggle('done', ok);
     clearTimeout(timer);
     timer = setTimeout(() => {
