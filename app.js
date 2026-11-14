@@ -152,6 +152,12 @@ function setupProcessor(root) {
 
   let processed = [];
 
+  // На Android без фильтра типов Chrome предлагает камеру/диктофон и просит к ним доступ.
+  // На iOS фильтр не ставим: там он мешал открыть окно выбора.
+  if (/Android/i.test(navigator.userAgent) && root.dataset.androidAccept) {
+    input.accept = root.dataset.androidAccept;
+  }
+
   // pickBtn — это <label> с <input type="file"> внутри: окно выбора открывает сам браузер
   const pickText = pickBtn.querySelector('.pick-text');
   const pickLabel = pickText.textContent;
