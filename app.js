@@ -69,6 +69,9 @@ async function processSingle(file, cfg) {
   const src = await file.text();
   const { text, count } = replaceAll(src, cfg.from, cfg.to);
   if (count === 0) {
+    if (src.includes(cfg.to)) {
+      throw new Error('Этот файл уже обновлён — в нём новый адрес сервера. Ничего делать не нужно.');
+    }
     throw new Error('В файле не найдено, что заменять. Проверьте, что выбрали правильный файл.');
   }
   return [{ name: file.name, blob: new Blob([text], { type: BIN }), count }];
@@ -112,10 +115,13 @@ async function processZip(file, cfg) {
     const { text, count } = replaceAll(src, cfg.from, cfg.to);
     // если заменять нечего — отдаём файл байт-в-байт как был
     const blob = new Blob([count ? text : bytes], { type: BIN });
-    out.push({ name, blob, count });
+    out.push({ name, blob, count, updated: !count && src.includes(cfg.to) });
   }
 
   if (!out.some((f) => f.count > 0)) {
+    if (out.some((f) => f.updated)) {
+      throw new Error('Эти файлы уже обновлены — в них новый адрес сервера. Ничего делать не нужно.');
+    }
     throw new Error('Ни в одном файле архива не найдено, что заменять. Проверьте, что выбрали правильный архив.');
   }
   return out;
@@ -215,6 +221,18 @@ function setupProcessor(root) {
       mode === 'zip'
         ? `Готово: ${pluralFiles(processed.length)}. Загрузка началась — если нет, нажмите кнопку ниже.`
         : 'Готово! Загрузка началась — если нет, нажмите кнопку ниже.';
+
+    // Подсказка, которая нужна только после успешной обработки (doneNote в steps.js)
+    const doneNote = typeof STEPS !== 'undefined' && (STEPS[root.dataset.steps] || {}).doneNote;
+    if (doneNote) {
+      let p = result.querySelector('.done-note');
+      if (!p) {
+        p = document.createElement('p');
+        p.className = 'done-note';
+        status.after(p);
+      }
+      p.innerHTML = doneNote;
+    }
 
     const shareable = processed.map((f) => new File([f.blob], f.name, { type: BIN }));
     shareBtn.hidden = !canShareFiles(shareable);

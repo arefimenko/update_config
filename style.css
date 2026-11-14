@@ -189,6 +189,14 @@ body {
 
 .step-action .processor { margin: 0; }
 .status { margin: 0 0 12px; color: var(--ok); font-weight: 500; }
+.done-note {
+  margin: -4px 0 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  font-size: 0.9rem;
+}
 .error { margin: 12px 0 0; color: var(--err); font-weight: 500; }
 
 .file-list {
