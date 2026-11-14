@@ -252,6 +252,51 @@ function setupProcessor(root) {
   resetBtn.addEventListener('click', reset);
 }
 
+/* Поле со значением и кнопкой «Скопировать» */
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    // запасной вариант для старых браузеров
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, text.length);
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch { /* ignore */ }
+    ta.remove();
+    return ok;
+  }
+}
+
+function makeCopyBox(value) {
+  const box = document.createElement('div');
+  box.className = 'copy-box';
+  const code = document.createElement('code');
+  code.textContent = value;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.textContent = 'Скопировать';
+  let timer;
+  btn.addEventListener('click', async () => {
+    const ok = await copyText(value);
+    btn.textContent = ok ? 'Скопировано ✓' : 'Не вышло — выделите вручную';
+    btn.classList.toggle('done', ok);
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      btn.textContent = 'Скопировать';
+      btn.classList.remove('done');
+    }, 2000);
+  });
+  box.append(code, btn);
+  return box;
+}
+
 /* Собираем шаги из steps.js; нумерация после кнопки продолжает список до неё */
 function renderSteps() {
   if (typeof STEPS === 'undefined') return;
@@ -273,6 +318,7 @@ function renderSteps() {
         n.innerHTML = step.note;
         li.appendChild(n);
       }
+      if (step.copy) li.appendChild(makeCopyBox(step.copy));
       if (step.img) {
         const img = document.createElement('img');
         img.src = step.img;
