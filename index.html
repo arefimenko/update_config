@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Обновление конфига VPN</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <h1>Обновление конфига VPN</h1>
+      <p>Выберите приложение, которым пользуетесь, и следуйте шагам.</p>
+      <p class="note">Файлы обрабатываются прямо на вашем телефоне и никуда не отправляются.</p>
+    </header>
+
+    <!-- Шаги для всех разделов редактируются в steps.js -->
+
+    <!-- ===================== 1. AmneziaVPN ===================== -->
+    <details class="section">
+      <summary>
+        <span class="num">1</span>
+        <span class="title">AmneziaVPN</span>
+        <span class="chev" aria-hidden="true"></span>
+      </summary>
+      <div class="body">
+        <ol class="steps" data-steps="amneziavpn" data-part="before"></ol>
+
+        <div class="processor" data-mode="single" data-config="amneziavpn" data-steps="amneziavpn">
+          <input type="file" class="file-input" hidden>
+          <button type="button" class="btn btn-primary act-pick">Загрузить файл</button>
+          <div class="result" hidden>
+            <p class="status"></p>
+            <div class="actions">
+              <button type="button" class="btn btn-primary act-download">Скачать файл</button>
+              <button type="button" class="btn btn-secondary act-share" hidden>Открыть в приложении…</button>
+            </div>
+            <button type="button" class="link act-reset">Выбрать другой файл</button>
+          </div>
+          <p class="error" hidden></p>
+        </div>
+
+        <ol class="steps" data-steps="amneziavpn" data-part="after"></ol>
+      </div>
+    </details>
+
+    <!-- ===================== 2. AmneziaWG (для ленивых) ===================== -->
+    <details class="section">
+      <summary>
+        <span class="num">2</span>
+        <span class="title">AmneziaWG <small>(для ленивых)</small></span>
+        <span class="chev" aria-hidden="true"></span>
+      </summary>
+      <div class="body">
+        <ol class="steps" data-steps="amneziawgLazy" data-part="before"></ol>
+
+        <div class="processor" data-mode="zip" data-config="amneziawg" data-steps="amneziawgLazy">
+          <input type="file" class="file-input" accept=".zip,application/zip,application/x-zip-compressed" hidden>
+          <button type="button" class="btn btn-primary act-pick">Загрузить файл</button>
+          <div class="result" hidden>
+            <p class="status"></p>
+            <div class="actions">
+              <button type="button" class="btn btn-primary act-download">Скачать файлы</button>
+              <button type="button" class="btn btn-secondary act-share" hidden>Сохранить / поделиться…</button>
+            </div>
+            <ul class="file-list"></ul>
+            <button type="button" class="link act-reset">Выбрать другой архив</button>
+          </div>
+          <p class="error" hidden></p>
+        </div>
+
+        <ol class="steps" data-steps="amneziawgLazy" data-part="after"></ol>
+      </div>
+    </details>
+
+    <!-- ===================== 3. AmneziaWG ===================== -->
+    <details class="section">
+      <summary>
+        <span class="num">3</span>
+        <span class="title">AmneziaWG</span>
+        <span class="chev" aria-hidden="true"></span>
+      </summary>
+      <div class="body">
+        <ol class="steps" data-steps="amneziawg" data-part="before"></ol>
+      </div>
+    </details>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="steps.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
