@@ -9,6 +9,9 @@
   --accent-soft: #e8efff;
   --ok: #15803d;
   --err: #b91c1c;
+  --warn: #92400e;
+  --warn-bg: #fef3c7;
+  --warn-border: #f59e0b;
   --radius: 14px;
 }
 
@@ -24,6 +27,9 @@
     --accent-soft: #1f2a40;
     --ok: #4ade80;
     --err: #f87171;
+    --warn: #fcd34d;
+    --warn-bg: #3a2a0a;
+    --warn-border: #d97706;
   }
 }
 
@@ -195,6 +201,17 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 .btn:active { transform: scale(.98); }
+label.btn { position: relative; text-align: center; }
+label.btn.busy { opacity: .6; pointer-events: none; }
+/* поле выбора файла спрятано визуально, но остаётся в документе — так iOS открывает его по тапу на label */
+.file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
 .btn:disabled { opacity: .6; cursor: default; }
 .btn-primary { background: var(--accent); color: var(--accent-text); }
 .btn-secondary {
@@ -221,11 +238,13 @@ body {
 .status { margin: 0 0 12px; color: var(--ok); font-weight: 500; }
 .done-note {
   margin: -4px 0 12px;
-  padding: 10px 12px;
+  padding: 12px 14px;
   border-radius: 10px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  font-size: 0.9rem;
+  background: var(--warn-bg);
+  border: 2px solid var(--warn-border);
+  color: var(--warn);
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 .error { margin: 12px 0 0; color: var(--err); font-weight: 500; }
 

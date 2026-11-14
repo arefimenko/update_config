@@ -152,7 +152,14 @@ function setupProcessor(root) {
 
   let processed = [];
 
-  const pickLabel = pickBtn.textContent;
+  // pickBtn — это <label> с <input type="file"> внутри: окно выбора открывает сам браузер
+  const pickText = pickBtn.querySelector('.pick-text');
+  const pickLabel = pickText.textContent;
+  const setBusy = (busy) => {
+    pickBtn.classList.toggle('busy', busy);
+    input.disabled = busy;
+    pickText.textContent = busy ? 'Обрабатываю…' : pickLabel;
+  };
 
   function showError(msg) {
     errorEl.textContent = msg;
@@ -164,8 +171,7 @@ function setupProcessor(root) {
     input.value = '';
     result.hidden = true;
     pickBtn.hidden = false;
-    pickBtn.disabled = false;
-    pickBtn.textContent = pickLabel;
+    setBusy(false);
     if (list) list.innerHTML = '';
     showError('');
   }
@@ -194,17 +200,13 @@ function setupProcessor(root) {
     }
   }
 
-  pickBtn.addEventListener('click', () => {
-    showError('');
-    input.click();
-  });
+  pickBtn.addEventListener('click', () => showError(''));
 
   input.addEventListener('change', async () => {
     const file = input.files && input.files[0];
     if (!file) return;
     showError('');
-    pickBtn.disabled = true;
-    pickBtn.textContent = 'Обрабатываю…';
+    setBusy(true);
 
     try {
       processed = mode === 'zip' ? await processZip(file, cfg) : await processSingle(file, cfg);
