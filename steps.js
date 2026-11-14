@@ -32,13 +32,17 @@ const STEPS = {
   // ---------- 2. AmneziaWG (для ленивых) ----------
   amneziawgLazy: {
     before: [
-      { img: 'img/amneziawg-lazy/1.jpeg', text: 'Описание шага 1.' },
-      { img: 'img/amneziawg-lazy/2.jpeg', text: 'Описание шага 2.' },
+      { img: 'img/amneziawg-lazy/1.jpeg', text: 'Откройте AmneziaWG и нажмите <b>Settings</b>.' },
+      { img: 'img/amneziawg-lazy/2.jpeg', text: 'Нажмите <b>Export zip archive</b>.' },
+      { img: 'img/amneziawg-lazy/3.jpeg', text: 'Введите код-пароль от телефона.' },
+      { img: 'img/amneziawg-lazy/4.jpeg', text: 'Сохраните архив на ваш телефон.', note: 'В зависимости от телефона сохранение файла может выглядеть по-другому.' },
     ],
-    hint: 'Нажмите кнопку ниже и выберите zip-архив.',
+    hint: 'Нажмите кнопку ниже и выберите архив, который только что сохранили.',
     after: [
-      { img: 'img/amneziawg-lazy/3.jpeg', text: 'Описание шага 3.' },
-      { img: 'img/amneziawg-lazy/4.jpeg', text: 'Описание шага 4.' },
+      { text: 'Исправленные файлы скачаются в <b>Загрузки</b> (Downloads).' },
+      { img: 'img/amneziawg-lazy/5.jpeg', text: 'Вернитесь в приложение AmneziaWG и нажмите <b>+</b>' },
+      { img: 'img/amneziawg-lazy/6.jpeg', text: 'Выберите <b>Create from file or archive</b>' },
+      { text: 'Выберите скачанные файлы. Готово — можно подключаться.' },
     ],
   },
 
