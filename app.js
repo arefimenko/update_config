@@ -1,26 +1,26 @@
 /* ============================================================
- *  НАСТРОЙКИ: что на что заменять в файлах.
- *  from — подстрока, которую ищем; to — на что меняем.
- *  Заменяются ВСЕ вхождения.
+ *  Что на что заменять в файлах. Сами адреса — в config.js.
+ *  from — список подстрок, которые ищем; to — на что меняем.
+ *  Заменяются ВСЕ вхождения каждой подстроки.
  * ============================================================ */
 const CONFIG = {
   // Раздел 1 — AmneziaVPN (один файл)
-  amneziavpn: {
-    from: '193.178.169.199',
-    to: '88.210.11.105',
-  },
-  // Раздел 2 — AmneziaWG (для ленивых), zip-архив с файлами
-  amneziawg: {
-    from: '193.178.169.199',
-    to: '88.210.11.105',
-  },
+  amneziavpn: { from: SERVER.oldIps, to: SERVER.newIp },
+  // Раздел 2 — AmneziaWG (через файл), zip-архив с файлами
+  amneziawg: { from: SERVER.oldIps, to: SERVER.newIp },
 };
 
 /* ------------------------------------------------------------ */
 
 function replaceAll(text, from, to) {
-  const parts = text.split(from);
-  return { text: parts.join(to), count: parts.length - 1 };
+  let count = 0;
+  for (const f of [].concat(from)) {
+    if (!f || f === to) continue;
+    const parts = text.split(f);
+    count += parts.length - 1;
+    text = parts.join(to);
+  }
+  return { text, count };
 }
 
 function downloadBlob(blob, name) {
